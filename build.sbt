@@ -16,14 +16,24 @@ lazy val root = project
       "org.apache.pekko" %% "pekko-actor-testkit-typed" % pekkoVersion % Test,
     ),
 
+    // Cats
+    libraryDependencies ++= Seq(
+      "org.typelevel" %% "cats-core"   % "2.9.0",
+      "org.typelevel" %% "cats-effect" % "3.5.0",
+      "org.typelevel" %% "cats-mtl"    % "1.3.0",
+    ),
+
+    // Monocle
+    libraryDependencies ++= Seq(
+      "dev.optics" %% "monocle-core"  % "3.2.0",
+      "dev.optics" %% "monocle-macro" % "3.2.0",
+    ),
+
     // Enhancement
     libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-core"     % "2.9.0",
-      "org.typelevel" %% "cats-effect"   % "3.5.0",
-      "org.typelevel" %% "cats-mtl"      % "1.3.0",
-      "co.fs2"        %% "fs2-core"      % "3.7.0",
-      "dev.optics"    %% "monocle-core"  % "3.2.0",
-      "dev.optics"    %% "monocle-macro" % "3.2.0",
+      "co.fs2"     %% "fs2-core"      % "3.7.0",
+      "dev.optics" %% "monocle-core"  % "3.2.0",
+      "dev.optics" %% "monocle-macro" % "3.2.0",
     ),
 
     // Refined
