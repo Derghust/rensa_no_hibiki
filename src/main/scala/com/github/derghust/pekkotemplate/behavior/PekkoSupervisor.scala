@@ -1,4 +1,4 @@
-package com.github.derghust.pekkotemplate.actor
+package com.github.derghust.pekkotemplate.behavior
 
 import com.github.derghust.pekkotemplate.message.Message
 import org.apache.pekko.actor.typed.Behavior
