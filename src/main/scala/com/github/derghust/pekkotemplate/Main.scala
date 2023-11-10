@@ -25,7 +25,7 @@ object Main {
     }
 
   def main(args: Array[String]): Unit = {
-    implicit val system           = ActorSystem(Behaviors.empty, "pekko-supervisor")
+    implicit val system           = ActorSystem(PekkoSupervisor(), "pekko-supervisor")
     implicit val executionContext = system.executionContext
 
     // streams are re-usable so we can define it here
@@ -36,27 +36,29 @@ object Main {
     val admins                                   = Set("Peter")
     def hasAdminPermissions(user: User): Boolean =
       admins.contains(user.name)
-    val route =
-      // path("random") {
-      //   get {
-      //     complete(
-      //       HttpEntity(
-      //         ContentTypes.`text/plain(UTF-8)`,
-      //         // transform each number to a chunk of bytes
-      //         numbers.map(n => ByteString(s"$n\n")),
-      //       )
-      //     )
-      //   }
-      // }
-      Route.seal {
-        authenticateBasic(realm = "secure site", myUserPassAuthenticator) { user =>
-          path("secured") {
-            authorize(hasAdminPermissions(user)) {
-              complete(s"'${user.name}' visited Peter's lair")
+    val route                                    =
+      concat(
+        path("random") {
+          get {
+            complete(
+              HttpEntity(
+                ContentTypes.`text/plain(UTF-8)`,
+                // transform each number to a chunk of bytes
+                numbers.map(n => ByteString(s"$n\n")),
+              )
+            )
+          }
+        },
+        Route.seal {
+          authenticateBasic(realm = "secure site", myUserPassAuthenticator) { user =>
+            path("secured") {
+              authorize(hasAdminPermissions(user)) {
+                complete(s"'${user.name}' visited Peter's lair")
+              }
             }
           }
-        }
-      }
+        },
+      )
 
     val bindingFuture = Http().newServerAt("localhost", 8080).bind(route)
     println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
