@@ -13,6 +13,7 @@ import org.apache.pekko.util.ByteString
 import scala.io.StdIn
 import org.apache.pekko.http.scaladsl.server.Route
 import org.apache.pekko.http.scaladsl.server.directives.Credentials
+import com.github.derghust.pekkotemplate.message.ArgumentMessage
 
 object Main {
 
@@ -67,33 +68,4 @@ object Main {
       .flatMap(_.unbind())                 // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
   }
-
-  // val system = ActorSystem(Behaviors.empty, "pekko-classic-supervisor")
-  // val typedSystem   = ActorSystem[Message](PekkoSupervisor(), "pekko-typed-supervisor")
-
-  // val classicExecutionContext = classicSystem.executionContext
-
-  // val numbers = Source.fromIterator(() => Iterator.continually(Random.nextInt()))
-  // val route   =
-  //   path("random") {
-  //     get {
-  //       complete(
-  //         HttpEntity(
-  //           ContentTypes.`text/plain(UTF-8)`,
-  //           // transform each number to a chunk of bytes
-  //           numbers.map(n => ByteString(s"$n\n")),
-  //         )
-  //       )
-  //     }
-  //   }
-
-  // val bindingFuture = Http(typedSystem).newServerAt("localhost", 8080).bind(route)
-
-  // println(s"Server online at http://localhost:8080/\nPress RETURN to stop...")
-  //   StdIn.readLine() // let it run until user presses return
-  //   bindingFuture
-  //     .flatMap(_.unbind()) // trigger unbinding from the port
-  //     .onComplete(_ => system.terminate()) // and shutdown when done
-  // }
-
 }

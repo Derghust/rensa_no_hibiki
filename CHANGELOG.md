@@ -18,3 +18,11 @@ Format:
 ```
 
 ## [Unreleased]
+
+## [0.0.1] - 12.11.2023 - @derghust
+### Added
+- Doobie database implementation for queries for:
+  - `User` - id, username
+  - `Subscription` - id, counter, entity_id, user_id
+  - `Entities` - id, label, description
+- Docker compose for postgres sql database for further development.
