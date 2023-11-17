@@ -46,9 +46,20 @@ lazy val root = project
       "ch.qos.logback"    % "logback-classic"           % "1.1.3"      % Runtime,
 
       // HTTP
-      "org.apache.pekko" %% "pekko-http"       % pekkoHttpVersion,
-      "io.circe"         %% "circe-core"       % circeVersion,
-      "com.beachape"     %% "enumeratum-circe" % enumeratumVersion,
+      "org.apache.pekko"     %% "pekko-http"            % pekkoHttpVersion,
+      "org.apache.pekko"     %% "pekko-http-spray-json" % pekkoHttpVersion,
+      "io.circe"             %% "circe-core"            % circeVersion,
+      "com.beachape"         %% "enumeratum-circe"      % enumeratumVersion,
+      "com.github.jwt-scala" %% "jwt-core"              % "9.4.4",
+      "de.mkammerer"          % "argon2-jvm-nolibs"     % "2.11",
+
+      // Swagger
+      "jakarta.ws.rs"                 % "jakarta.ws.rs-api"         % "3.0.0",
+      "com.github.swagger-akka-http" %% "swagger-pekko-http"        % "2.11.0",
+      "com.github.swagger-akka-http" %% "swagger-scala-module"      % "2.11.0",
+      "com.github.swagger-akka-http" %% "swagger-enumeratum-module" % "2.8.0",
+      "com.fasterxml.jackson.module" %% "jackson-module-scala"      % "2.15.3",
+      "io.swagger.core.v3"            % "swagger-jaxrs2-jakarta"    % "2.2.18",
 
       // Database
       "org.tpolecat" %% "doobie-core"      % doobieVersion,
