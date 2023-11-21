@@ -24,7 +24,7 @@ class Rest(address: String, port: Int)(
 ) extends RouteConcatenation {
   val routes =
     SwaggerDocService.routes ~
-      SwaggerDocService.route ~
+      SwaggerDocService.swaggerRoute ~
       AuthenticationAPI().route
 
   val bindingFuture = Http().newServerAt(address, port).bind(routes)
@@ -35,4 +35,23 @@ class Rest(address: String, port: Int)(
     bindingFuture
       .flatMap(_.unbind()) // trigger unbinding from the port
       .onComplete(_ => system.terminate()) // and shutdown when done
+}
+
+object Rest {
+
+  /** REST API routes.
+    *
+    * @param address
+    *   IPxv address.
+    * @param port
+    *   address port.
+    * @param system
+    *   Implicit actor system.
+    * @param executionContext
+    *   Implicit execution context.
+    */
+  def apply(address: String, port: Int)(
+      implicit system: ActorSystem[Message],
+      executionContext: ExecutionContextExecutor,
+  ): Rest = new Rest(address, port)
 }

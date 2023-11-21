@@ -8,7 +8,7 @@ import org.apache.pekko.actor.typed.ActorRef
 import scala.util.Try
 
 object PasswordHashingSupervisor {
-  private lazy val empty: Behavior[Message] =
+  lazy val empty: Behavior[Message] =
     Behaviors.receive[Message] { (context, message) =>
       message match
         case msg @ ArgumentMessage("init", args) =>
@@ -37,14 +37,14 @@ object PasswordHashingSupervisor {
   ): Behavior[Message] =
     Behaviors.receive[Message] { (context, message) =>
       message match
-        case msg @ ArgumentMessage("hash", args) =>
+        case msg @ PasswordHashingWorker.HashPasswordRequest(_, _) =>
           context.log.info(
-            s"Processing Argument message [cmd=${msg.cmd}; args=${msg.args}]"
+            s"Processing Argument message [msg=${msg}]"
           )
           val newRoundRobinPosition = (roundRobin + 1) % workers.length
           workers(newRoundRobinPosition) ! msg
           initialized(workers, newRoundRobinPosition)
-        case unhandled                           =>
+        case unhandled                                             =>
           context.log.error(s"Unhandled message! [message=$unhandled]")
           initialized(workers, roundRobin)
     }

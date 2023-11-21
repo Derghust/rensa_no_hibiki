@@ -30,7 +30,7 @@ object PasswordHashing {
       memory: Int = 65536,
       parallelism: Int = 1,
   ): String =
-    val convertedData = data.toCharArray()
+    val convertedData = data.toCharArray
     val hash          = argon2.hash(iterations, memory, parallelism, convertedData)
     argon2.wipeArray(convertedData);
     hash
@@ -51,5 +51,5 @@ object PasswordHashing {
     *   Return true for equal hash, otherwise return false.
     */
   def verify(data: String, hash: String): Boolean =
-    argon2.verify(data, hash)
+    argon2.verify(hash, data.toCharArray)
 }

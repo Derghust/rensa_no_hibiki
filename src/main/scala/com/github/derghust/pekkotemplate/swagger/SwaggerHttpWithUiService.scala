@@ -14,7 +14,7 @@ trait SwaggerHttpWithUiService extends SwaggerHttpService {
     pathPrefix(apiDocsPath) {
       val pathInit = removeTrailingSlashIfNecessary(apiDocsPath)
       redirect(
-        s"https://petstore.swagger.io/?url=http://localhost:12345/$pathInit/swagger.json",
+        s"https://petstore.swagger.io/?url=http://localhost:8080/$pathInit/swagger.json",
         PermanentRedirect,
       )
     }

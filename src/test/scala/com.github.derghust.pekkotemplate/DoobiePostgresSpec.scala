@@ -1,24 +1,18 @@
 package com.github.derghust.pekkotemplate
 
-import org.scalatest.wordspec.AnyWordSpec
-import doobie.util.transactor.Transactor
+import cats.effect.{ExitCode, IO, Sync, SyncIO}
+import cats.effect.kernel.Ref
+import cats.effect.unsafe.implicits.global
+import com.github.derghust.pekkotemplate.DoobiePostgresUtils.*
+import com.github.derghust.pekkotemplate.database.{EntityDB, SubscriptionDB, UserDB}
+import com.github.derghust.pekkotemplate.structure.User
 import doobie.implicits.*
 import doobie.refined.implicits.*
-import cats.effect.IO
-import cats.effect.ExitCode
-import com.github.derghust.pekkotemplate.database.UserDB
-import cats.effect.SyncIO
-import cats.effect.Sync
-import com.github.derghust.pekkotemplate.structure.User
-import fs2.Chunk
-import cats.effect.unsafe.implicits.global
-import cats.effect.kernel.Ref
-import com.github.derghust.pekkotemplate.DoobiePostgresUtils.databaseName
-import org.scalatest.BeforeAndAfter
-import com.github.derghust.pekkotemplate.DoobiePostgresUtils.*
 import doobie.util.Read
-import com.github.derghust.pekkotemplate.database.EntityDB
-import com.github.derghust.pekkotemplate.database.SubscriptionDB
+import doobie.util.transactor.Transactor
+import fs2.Chunk
+import org.scalatest.BeforeAndAfter
+import org.scalatest.wordspec.AnyWordSpec
 
 class DoobiePostgresSpec
     extends AnyWordSpec
@@ -39,10 +33,7 @@ class DoobiePostgresSpec
   }
 
   def processChunk[B: Read](chunk: Chunk[B]): IO[Unit] = IO {
-    println(s"Processing chunk with ${chunk.size} records")
     assert(chunk.size > 0)
-
-    chunk.foreach(println)
   }
 
   "A UserDB transactor" when {

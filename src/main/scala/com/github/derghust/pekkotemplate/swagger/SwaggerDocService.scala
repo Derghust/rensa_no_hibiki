@@ -7,7 +7,7 @@ import com.github.derghust.pekkotemplate.api.*
 import io.swagger.v3.oas.models.ExternalDocumentation
 
 object SwaggerDocService extends SwaggerHttpWithUiService {
-  val route = path("swagger")(getFromResource("dist/index.html")) ~
+  val swaggerRoute = path("swagger")(getFromResource("dist/index.html")) ~
     getFromResourceDirectory("dist")
 
   override val apiClasses                                  = Set(classOf[AuthenticationAPI])

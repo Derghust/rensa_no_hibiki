@@ -26,7 +26,7 @@ object PasswordHashingWorker {
   lazy val run: Behavior[Message] =
     Behaviors.receive[Message] { (context, message) =>
       message match
-        case msg @ HashPasswordRequest(requester, password) =>
+        case HashPasswordRequest(requester, password) =>
           requester ! HashPasswordResponse(PasswordHashing.hash(password))
           run
         case unhandled                                      =>
