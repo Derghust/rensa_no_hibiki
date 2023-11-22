@@ -31,7 +31,7 @@ class UserDB(transactor: Transactor[IO])
     *   Scala cats [[IO]] for query on [[Option]] as [[User]].
     */
   def getUserByName(name: String) =
-    val sqlSchema    = "id, username"
+    val sqlSchema    = "id, username, password"
     val sqlTableName = "app_user"
     val segment      = fr""
     // sql"select id, username from app_user where name = $name"

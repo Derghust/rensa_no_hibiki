@@ -11,4 +11,5 @@ import eu.timepit.refined.numeric.*
 final case class User(
     id: Id,
     username: String,
+    password: String,
 )

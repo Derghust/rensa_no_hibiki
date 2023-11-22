@@ -37,14 +37,14 @@ object PasswordHashingSupervisor {
   ): Behavior[Message] =
     Behaviors.receive[Message] { (context, message) =>
       message match
-        case msg @ PasswordHashingWorker.HashPasswordRequest(_, _) =>
+        case msg: PasswordHashingWorker.PasswordHashingWorkerMessage =>
           context.log.info(
-            s"Processing Argument message [msg=${msg}]"
+            s"Processing PasswordHashingWorkerMessage message [msg=${msg}]"
           )
           val newRoundRobinPosition = (roundRobin + 1) % workers.length
           workers(newRoundRobinPosition) ! msg
           initialized(workers, newRoundRobinPosition)
-        case unhandled                                             =>
+        case unhandled                                               =>
           context.log.error(s"Unhandled message! [message=$unhandled]")
           initialized(workers, roundRobin)
     }

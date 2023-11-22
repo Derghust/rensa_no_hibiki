@@ -18,14 +18,29 @@ import jakarta.ws.rs.POST
 import com.github.derghust.pekkotemplate.jwt.JWTWrapper
 import org.apache.pekko.http.scaladsl.marshalling.ToResponseMarshallable
 import org.apache.pekko.http.scaladsl.model.StatusCodes
+import com.github.derghust.pekkotemplate.database.UserDB
+import cats.effect.unsafe.implicits.global
+import com.github.derghust.pekkotemplate.util.typeExtension.toEither
+import org.apache.pekko.actor.typed.Behavior
+import com.github.derghust.pekkotemplate.message.Message
+import org.apache.pekko.actor.typed.scaladsl.ActorContext
+import com.github.derghust.pekkotemplate.behavior.PasswordHashingSupervisor
+import com.github.derghust.pekkotemplate.message.ArgumentMessage
 
 @Path("/authentication")
-class AuthenticationAPI extends Directives with DefaultJsonFormats {
+class AuthenticationAPI(userDB: UserDB)(
+    implicit val context: ActorContext[Message]
+) extends Directives
+    with DefaultJsonFormats {
   implicit val format: RootJsonFormat[AuthenticationMessage] = jsonFormat2(
     AuthenticationMessage.apply
   )
 
-  val route: Route = getHello
+  val route: Route       = getHello
+  val passwordSupervisor =
+    context.spawn(PasswordHashingSupervisor.empty, "password-supervisor")
+
+  passwordSupervisor ! ArgumentMessage("init", List(8.toString()))
 
   @POST
   @Consumes(Array(MediaType.APPLICATION_JSON))
@@ -68,6 +83,18 @@ class AuthenticationAPI extends Directives with DefaultJsonFormats {
           //    - Left send complete(StatusCodes.Unauthorized)
           //    - Right send complete(s"Authorized: [user=${message.username}; token=$token]")
 
+          import cats.implicits.toBifunctorOps
+          val a: Either[Int, Boolean] = Right(true)
+          val b                       = a.leftMap(x => x)
+
+          val user = userDB
+            .getUserByName(message.username)
+            .unsafeRunSync()
+            .toEither(complete(StatusCodes.NotFound))
+            .map { value =>
+              // passwordSupervisor !
+            }
+
           val token = JWTWrapper.getJWT("512")
 
           complete(s"Authorized: [user=${message.username}; token=$token]")
@@ -77,5 +104,7 @@ class AuthenticationAPI extends Directives with DefaultJsonFormats {
 }
 
 object AuthenticationAPI {
-  def apply(): AuthenticationAPI = new AuthenticationAPI()
+  def apply(userDB: UserDB)(
+      implicit context: ActorContext[Message]
+  ): AuthenticationAPI = new AuthenticationAPI(userDB)
 }

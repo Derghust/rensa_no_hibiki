@@ -6,6 +6,9 @@ import scala.concurrent.ExecutionContextExecutor
 import org.apache.pekko.actor.typed.ActorSystem
 import com.github.derghust.pekkotemplate.message.Message
 import com.github.derghust.pekkotemplate.swagger.SwaggerDocService
+import com.github.derghust.pekkotemplate.database.UserDB
+import doobie.util.transactor.Transactor
+import cats.effect.IO
 
 /** REST API routes.
   *
@@ -22,10 +25,20 @@ class Rest(address: String, port: Int)(
     implicit val system: ActorSystem[Message],
     val executionContext: ExecutionContextExecutor,
 ) extends RouteConcatenation {
+  val databaseName = "rnh"
+  val transactor   = Transactor.fromDriverManager[IO](
+    driver = "org.postgresql.Driver",
+    url = s"jdbc:postgresql:$databaseName",
+    user = "docker",
+    password = "docker",
+    logHandler = None,
+  )
+  val userDB       = UserDB(transactor)
+
   val routes =
     SwaggerDocService.routes ~
       SwaggerDocService.swaggerRoute ~
-      AuthenticationAPI().route
+      AuthenticationAPI(userDB).route
 
   val bindingFuture = Http().newServerAt(address, port).bind(routes)
 
