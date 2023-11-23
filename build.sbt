@@ -10,7 +10,7 @@ val circeVersion            = "0.14.6"
 val chimneyVersion          = "0.8.2"
 val doobieVersion           = "1.0.0-RC4"
 val fs2Version              = "3.9.3"
-val pekkoVersion            = "1.0.1"
+val pekkoVersion            = "1.0.2"
 val pekkoHttpVersion        = "1.0.0"
 val pekkoHttpSessionVersion = "0.7.1"
 val scalatestVersion        = "3.2.17"
@@ -23,31 +23,34 @@ lazy val root = project
     scalaVersion := scala3Version,
     libraryDependencies ++= Seq(
       // Extensions
-      "org.typelevel" %% "cats-core"            % catsVersion,
-      "org.typelevel" %% "cats-mtl"             % catsMTLVersion,
-      "org.typelevel" %% "cats-effect"          % catsEffectVersion,
-      "dev.optics"    %% "monocle-core"         % monocleVersion,
-      "dev.optics"    %% "monocle-macro"        % monocleVersion,
-      "eu.timepit"    %% "refined"              % refinedVersion,
-      "eu.timepit"    %% "refined-cats"         % refinedVersion,
-      "com.beachape"  %% "enumeratum"           % enumeratumVersion,
-      "io.scalaland"  %% "chimney"              % chimneyVersion,
-      "io.scalaland"  %% "chimney-cats"         % chimneyVersion,
-      "co.fs2"        %% "fs2-core"             % fs2Version,
-      "co.fs2"        %% "fs2-io"               % fs2Version,
-      "co.fs2"        %% "fs2-reactive-streams" % fs2Version,
-      "co.fs2"        %% "fs2-scodec"           % fs2Version,
+      "org.typelevel"              %% "cats-core"            % catsVersion,
+      "org.typelevel"              %% "cats-mtl"             % catsMTLVersion,
+      "org.typelevel"              %% "cats-effect"          % catsEffectVersion,
+      "dev.optics"                 %% "monocle-core"         % monocleVersion,
+      "dev.optics"                 %% "monocle-macro"        % monocleVersion,
+      "eu.timepit"                 %% "refined"              % refinedVersion,
+      "eu.timepit"                 %% "refined-cats"         % refinedVersion,
+      "com.beachape"               %% "enumeratum"           % enumeratumVersion,
+      "io.scalaland"               %% "chimney"              % chimneyVersion,
+      "io.scalaland"               %% "chimney-cats"         % chimneyVersion,
+      "co.fs2"                     %% "fs2-core"             % fs2Version,
+      "co.fs2"                     %% "fs2-io"               % fs2Version,
+      "co.fs2"                     %% "fs2-reactive-streams" % fs2Version,
+      "co.fs2"                     %% "fs2-scodec"           % fs2Version,
+      "com.typesafe.scala-logging" %% "scala-logging"        % "3.9.5",
 
       // Pekko
       "org.apache.pekko" %% "pekko-actor-typed"         % pekkoVersion,
       "org.apache.pekko" %% "pekko-slf4j"               % pekkoVersion,
+      "ch.qos.logback"    % "logback-classic"           % "1.4.12",
       "org.apache.pekko" %% "pekko-stream"              % pekkoVersion,
       "org.apache.pekko" %% "pekko-actor-testkit-typed" % pekkoVersion % Test,
-      "ch.qos.logback"    % "logback-classic"           % "1.1.3"      % Runtime,
+      "org.apache.pekko" %% "pekko-stream-testkit"      % pekkoVersion % Test,
 
       // HTTP
       "org.apache.pekko"     %% "pekko-http"            % pekkoHttpVersion,
       "org.apache.pekko"     %% "pekko-http-spray-json" % pekkoHttpVersion,
+      "org.apache.pekko"     %% "pekko-http-testkit"    % pekkoHttpVersion % Test,
       "io.circe"             %% "circe-core"            % circeVersion,
       "com.beachape"         %% "enumeratum-circe"      % enumeratumVersion,
       "com.github.jwt-scala" %% "jwt-core"              % "9.4.4",
@@ -67,20 +70,25 @@ lazy val root = project
       "org.tpolecat" %% "doobie-refined"   % doobieVersion,
       "org.tpolecat" %% "doobie-scalatest" % doobieVersion % Test,
 
-      // Authorization & Authentication
-      // "com.softwaremill.pekko-http-session" %% "core" % pekkoHttpSessionVersion,
-      // "com.softwaremill.pekko-http-session" %% "jwt"  % pekkoHttpSessionVersion,
+      // Cache
+      "com.github.blemale" %% "scaffeine" % "5.2.1",
 
       // Tests
       "org.scalatest" %% "scalatest" % scalatestVersion % Test,
-      "org.scalameta" %% "munit"     % "0.7.29"         % Test,
-    ),
+      "org.scalameta" %% "munit"     % "0.7.29"         % Test
+    )
   )
 
 inThisBuild(
   List(
     scalaVersion      := scala3Version,
     semanticdbEnabled := true,
-    semanticdbVersion := scalafixSemanticdb.revision,
+    semanticdbVersion := scalafixSemanticdb.revision
   )
 )
+
+// Scalafix
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix"             % "0.2.0"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-cats"        % "0.2.0"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-cats-effect" % "0.2.0"
+ThisBuild / scalafixDependencies += "org.typelevel" %% "typelevel-scalafix-fs2"         % "0.2.0"
