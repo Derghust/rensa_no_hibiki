@@ -1,21 +1,26 @@
 -- Drop existing database
 DROP DATABASE IF EXISTS rnh;
-DROP DATABASE IF EXISTS rnh-test;
 
 -- Database
 CREATE DATABASE rnh;
-CREATE DATABASE rnh-test;
 
 -- Drop existing tables
 DROP TABLE IF EXISTS subscription;
 DROP TABLE IF EXISTS entity;
 DROP TABLE IF EXISTS app_user;
 
--- Create the 'app_user' table with an array of subscription_id
-CREATE TABLE app_user (
+-- Create the 'registered_user' table
+CREATE TABLE registered_user (
     id VARCHAR(255) PRIMARY KEY,
-    username VARCHAR(255) NOT NULL
-    -- Add other user-related columns as needed
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    jwt VARCHAR(255)
+);
+
+-- Create the 'anonymous_user' table with
+CREATE TABLE anonymous_user (
+    id VARCHAR(255) PRIMARY KEY,
+    jwt VARCHAR(255)
 );
 
 -- Create the 'entity' table

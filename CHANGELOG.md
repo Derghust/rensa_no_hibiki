@@ -19,6 +19,18 @@ Format:
 
 ## [Unreleased]
 
+## [0.0.2] - 01.18.2024 - @derghust
+### Added
+- Implement REST Api for user authentication.
+- Implement password actor with supervisor and workers.
+  - Password hashing
+  - Password validation
+    - Registration
+    - Login
+- Implement database actor with supervisor and workers.
+  - Write request on user table.
+  - Read request on user table.
+
 ## [0.0.1] - 12.11.2023 - @derghust
 ### Added
 - Doobie database implementation for queries for:
